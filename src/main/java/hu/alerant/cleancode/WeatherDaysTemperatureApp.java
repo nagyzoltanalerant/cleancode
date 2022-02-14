@@ -5,11 +5,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WeatherDaysTemperatureApp {
     private final String dataFileName;
@@ -22,14 +19,14 @@ public class WeatherDaysTemperatureApp {
         String dataFileName = "datamunging/weather.dat";
 
         WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
-        List<WeatherDataLine> lines = app.readDataLines();
-        WeatherDataLine minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(lines);
+        List<WeatherDataLine> weatherDataLines = app.readWeatherDataLines();
+        WeatherDataLine minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(weatherDataLines);
 
         System.out.println("Found minimum diff, in this row:" +"\n"+ minimumTemperatureDiffRow.toString());
     }
 
 
-    public List<WeatherDataLine> readDataLines() {
+    public List<WeatherDataLine> readWeatherDataLines() {
         List<WeatherDataLine> dataLines = new ArrayList<>();
         try {
             List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
