@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class WeatherDaysTemperatureApp {
@@ -18,42 +20,46 @@ public class WeatherDaysTemperatureApp {
         String dataFileName = "datamunging/weather.dat";
 
         WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
-        long minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow();
+        List<String> lines = app.readDataLines();
+        String minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(lines);
 
-        System.out.println("Found minimum diff, day number:" + minimumTemperatureDiffRow);
+        System.out.println("Found minimum diff, in this row:" +"\n"+ minimumTemperatureDiffRow);
     }
 
-    /**
-     * Find minimum difference between daily Max and Min temperatures
-     * @return row number - business row number, not file row
-     */
-    public long findMinimumTemperatureDiffRow() {
-        long foundMinTemp = Long.MAX_VALUE;
-        long foundMinTempDay = -1;
 
+    private List<String> readDataLines() {
+        List<String> dataLines = new ArrayList<>();
         try {
             List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
 
             //skipping first two header rows and last summary row
-            for (String line : allLines.subList(2, allLines.size() - 1)) {
-                List<String> lineColumns = Arrays.asList(line.split("\\s+"));
-
-                long actualDiffTemp = getMaxTemp(lineColumns) - getMinTemp(lineColumns);
-
-                //compare to known minimum
-                if (actualDiffTemp < foundMinTemp) {
-                    foundMinTemp = actualDiffTemp;
-                    foundMinTempDay = Long.parseLong(lineColumns.get(1));
-                }
-            }
+            dataLines.addAll(allLines.subList(2, allLines.size() - 1));
 
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
+        return dataLines;
+    }
+
+    public String findMinimumTemperatureDiffRow(List<String> lines) {
+        String minimumTemperatureDiffRow = "";
+        long foundMinTemp = Long.MAX_VALUE;
+
+        for (String line : lines) {
+            List<String> lineColumns = Arrays.asList(line.split("\\s+"));
+
+            long actualDiffTemp = getMaxTemp(lineColumns) - getMinTemp(lineColumns);
+
+            //compare to known minimum
+            if (actualDiffTemp < foundMinTemp) {
+                foundMinTemp = actualDiffTemp;
+                minimumTemperatureDiffRow = line;
+            }
+        }
 
         //results
         System.out.println("Found minimum diff:" + foundMinTemp);
-        return foundMinTempDay;
+        return minimumTemperatureDiffRow;
     }
 
     private long getMinTemp(List<String> lineColumns) {
