@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class WeatherDaysTemperatureApp {
     private final String dataFileName;
@@ -20,20 +22,24 @@ public class WeatherDaysTemperatureApp {
         String dataFileName = "datamunging/weather.dat";
 
         WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
-        List<String> lines = app.readDataLines();
-        String minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(lines);
+        List<WeatherDataLine> lines = app.readDataLines();
+        WeatherDataLine minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(lines);
 
-        System.out.println("Found minimum diff, in this row:" +"\n"+ minimumTemperatureDiffRow);
+        System.out.println("Found minimum diff, in this row:" +"\n"+ minimumTemperatureDiffRow.toString());
     }
 
 
-    private List<String> readDataLines() {
-        List<String> dataLines = new ArrayList<>();
+    public List<WeatherDataLine> readDataLines() {
+        List<WeatherDataLine> dataLines = new ArrayList<>();
         try {
             List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
 
             //skipping first two header rows and last summary row
-            dataLines.addAll(allLines.subList(2, allLines.size() - 1));
+            dataLines =
+                    allLines.subList(2, allLines.size() - 1)
+                            .stream()
+                            .map(WeatherDataLine::convert)
+                            .collect(Collectors.toList());
 
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -41,14 +47,12 @@ public class WeatherDaysTemperatureApp {
         return dataLines;
     }
 
-    public String findMinimumTemperatureDiffRow(List<String> lines) {
-        String minimumTemperatureDiffRow = "";
+    public WeatherDataLine findMinimumTemperatureDiffRow(List<WeatherDataLine> lines) {
+        WeatherDataLine minimumTemperatureDiffRow = new WeatherDataLine();
         long foundMinTemp = Long.MAX_VALUE;
 
-        for (String line : lines) {
-            List<String> lineColumns = Arrays.asList(line.split("\\s+"));
-
-            long actualDiffTemp = getMaxTemp(lineColumns) - getMinTemp(lineColumns);
+        for (WeatherDataLine line : lines) {
+            long actualDiffTemp = line.getMaxTemp() - line.getMinTemp();
 
             //compare to known minimum
             if (actualDiffTemp < foundMinTemp) {
@@ -62,11 +66,4 @@ public class WeatherDaysTemperatureApp {
         return minimumTemperatureDiffRow;
     }
 
-    private long getMinTemp(List<String> lineColumns) {
-        return Long.parseLong(lineColumns.get(3).replaceAll("\\*", ""));
-    }
-
-    private long getMaxTemp(List<String> lineColumns) {
-        return Long.parseLong(lineColumns.get(2).replaceAll("\\*", ""));
-    }
 }
