@@ -1,7 +1,6 @@
 package hu.alerant.cleancode;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,8 +12,8 @@ public class WeatherDaysTemperatureApp {
 
         String fileName = "datamunging/weather.dat";
 
-        BigDecimal foundMinimum = BigDecimal.valueOf(Long.MAX_VALUE);
-        BigDecimal foundMinimumRow = BigDecimal.ZERO;
+        long foundMinimum = Long.MAX_VALUE;
+        long foundMinimumRow = -1;
 
         try {
             List<String> allLines = allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(fileName).toURI()));
@@ -24,19 +23,16 @@ public class WeatherDaysTemperatureApp {
                 List<String> lineColumns = Arrays.asList(line.split("\\s+"));
 
                 //get max and min columns but remove asterisks
-                BigDecimal max = BigDecimal.valueOf(Long.parseLong(lineColumns.get(2).replaceAll("\\*", "")));
-                BigDecimal min = BigDecimal.valueOf(Long.parseLong(lineColumns.get(3).replaceAll("\\*", "")));
-                BigDecimal actualDiff = max.subtract(min);
+                long max = Long.parseLong(lineColumns.get(2).replaceAll("\\*", ""));
+                long min = Long.parseLong(lineColumns.get(3).replaceAll("\\*", ""));
+                long actualDiff = max - min;
 
                 //compare to known minimum
-                if (actualDiff.compareTo(foundMinimum) < 0) {
+                if (actualDiff < foundMinimum) {
                     foundMinimum = actualDiff;
-                    foundMinimumRow = BigDecimal.valueOf(Long.parseLong(lineColumns.get(1)));
+                    foundMinimumRow = Long.parseLong(lineColumns.get(1));
                 }
             }
-            //results
-            System.out.println("Found minimum diff:" + foundMinimum);
-            System.out.println("Found minimum diff, row number:" + foundMinimumRow);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,6 +40,9 @@ public class WeatherDaysTemperatureApp {
             e.printStackTrace();
         }
 
+        //results
+        System.out.println("Found minimum diff:" + foundMinimum);
+        System.out.println("Found minimum diff, row number:" + foundMinimumRow);
     }
 
 }
