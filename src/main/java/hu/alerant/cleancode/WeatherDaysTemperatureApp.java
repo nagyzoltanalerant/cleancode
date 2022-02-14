@@ -11,27 +11,30 @@ import java.util.List;
 public class WeatherDaysTemperatureApp {
     public static void main(String[] args) {
 
-        WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp();
-
         String fileName = "datamunging/weather.dat";
+
         BigDecimal foundMinimum = BigDecimal.valueOf(Long.MAX_VALUE);
         BigDecimal foundMinimumRow = BigDecimal.ZERO;
 
         try {
             List<String> allLines = allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(fileName).toURI()));
 
+            //skipping first two header rows and last summary row
             for (String line : allLines.subList(2, allLines.size() - 1)) {
                 List<String> lineColumns = Arrays.asList(line.split("\\s+"));
 
+                //get max and min columns but remove asterisks
                 BigDecimal max = BigDecimal.valueOf(Long.parseLong(lineColumns.get(2).replaceAll("\\*", "")));
                 BigDecimal min = BigDecimal.valueOf(Long.parseLong(lineColumns.get(3).replaceAll("\\*", "")));
                 BigDecimal actualDiff = max.subtract(min);
 
+                //compare to known minimum
                 if (actualDiff.compareTo(foundMinimum) < 0) {
                     foundMinimum = actualDiff;
                     foundMinimumRow = BigDecimal.valueOf(Long.parseLong(lineColumns.get(1)));
                 }
             }
+            //results
             System.out.println("Found minimum diff:" + foundMinimum);
             System.out.println("Found minimum diff, row number:" + foundMinimumRow);
 
