@@ -20,7 +20,6 @@ public class WeatherDaysTemperatureApp {
 
     public static void main(String[] args) {
         String dataFileName = "datamunging/weather.dat";
-
         WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
         List<WeatherDataLine> weatherDataLines = app.readWeatherDataLines();
         WeatherDataLine minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow(weatherDataLines);
