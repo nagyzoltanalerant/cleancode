@@ -20,7 +20,7 @@ public class WeatherDaysTemperatureApp {
         WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
         long minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow();
 
-        System.out.println("Found minimum diff, row number:" + minimumTemperatureDiffRow);
+        System.out.println("Found minimum diff, day number:" + minimumTemperatureDiffRow);
     }
 
     /**
@@ -28,8 +28,8 @@ public class WeatherDaysTemperatureApp {
      * @return row number - business row number, not file row
      */
     public long findMinimumTemperatureDiffRow() {
-        long foundMinimum = Long.MAX_VALUE;
-        long foundMinimumRow = -1;
+        long foundMinTemp = Long.MAX_VALUE;
+        long foundMinTempDay = -1;
 
         try {
             List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
@@ -38,12 +38,12 @@ public class WeatherDaysTemperatureApp {
             for (String line : allLines.subList(2, allLines.size() - 1)) {
                 List<String> lineColumns = Arrays.asList(line.split("\\s+"));
 
-                long actualDiff = getMaxTemperature(lineColumns) - getMinTemperature(lineColumns);
+                long actualDiffTemp = getMaxTemp(lineColumns) - getMinTemp(lineColumns);
 
                 //compare to known minimum
-                if (actualDiff < foundMinimum) {
-                    foundMinimum = actualDiff;
-                    foundMinimumRow = Long.parseLong(lineColumns.get(1));
+                if (actualDiffTemp < foundMinTemp) {
+                    foundMinTemp = actualDiffTemp;
+                    foundMinTempDay = Long.parseLong(lineColumns.get(1));
                 }
             }
 
@@ -52,15 +52,15 @@ public class WeatherDaysTemperatureApp {
         }
 
         //results
-        System.out.println("Found minimum diff:" + foundMinimum);
-        return foundMinimumRow;
+        System.out.println("Found minimum diff:" + foundMinTemp);
+        return foundMinTempDay;
     }
 
-    private long getMinTemperature(List<String> lineColumns) {
+    private long getMinTemp(List<String> lineColumns) {
         return Long.parseLong(lineColumns.get(3).replaceAll("\\*", ""));
     }
 
-    private long getMaxTemperature(List<String> lineColumns) {
+    private long getMaxTemp(List<String> lineColumns) {
         return Long.parseLong(lineColumns.get(2).replaceAll("\\*", ""));
     }
 }
