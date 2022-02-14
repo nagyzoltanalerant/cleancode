@@ -8,16 +8,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WeatherDaysTemperatureApp {
-    private final String fileName;
+    private final String dataFileName;
 
-    public WeatherDaysTemperatureApp(String fileName) {
-        this.fileName = fileName;
+    public WeatherDaysTemperatureApp(String dataFileName) {
+        this.dataFileName = dataFileName;
     }
 
     public static void main(String[] args) {
-        String fileName = "datamunging/weather.dat";
+        String dataFileName = "datamunging/weather.dat";
 
-        WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(fileName);
+        WeatherDaysTemperatureApp app = new WeatherDaysTemperatureApp(dataFileName);
         long minimumTemperatureDiffRow = app.findMinimumTemperatureDiffRow();
 
         System.out.println("Found minimum diff, row number:" + minimumTemperatureDiffRow);
@@ -32,16 +32,13 @@ public class WeatherDaysTemperatureApp {
         long foundMinimumRow = -1;
 
         try {
-            List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(fileName).toURI()));
+            List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
 
             //skipping first two header rows and last summary row
             for (String line : allLines.subList(2, allLines.size() - 1)) {
                 List<String> lineColumns = Arrays.asList(line.split("\\s+"));
 
-                //get max and min columns but remove asterisks
-                long max = Long.parseLong(lineColumns.get(2).replaceAll("\\*", ""));
-                long min = Long.parseLong(lineColumns.get(3).replaceAll("\\*", ""));
-                long actualDiff = max - min;
+                long actualDiff = getMaxTemperature(lineColumns) - getMinTemperature(lineColumns);
 
                 //compare to known minimum
                 if (actualDiff < foundMinimum) {
@@ -57,5 +54,13 @@ public class WeatherDaysTemperatureApp {
         //results
         System.out.println("Found minimum diff:" + foundMinimum);
         return foundMinimumRow;
+    }
+
+    private long getMinTemperature(List<String> lineColumns) {
+        return Long.parseLong(lineColumns.get(3).replaceAll("\\*", ""));
+    }
+
+    private long getMaxTemperature(List<String> lineColumns) {
+        return Long.parseLong(lineColumns.get(2).replaceAll("\\*", ""));
     }
 }
