@@ -32,7 +32,6 @@ public class WeatherDaysTemperatureApp {
         List<WeatherDataLine> weatherDataLines = new ArrayList<>();
         try (var allLines = Files.lines(Paths.get(getSystemResource(dataFileName).toURI()))) {
 
-            //skipping first two header rows
             weatherDataLines = allLines
                                 .skip(HEADER_LINES)
                                 .filter(WeatherDaysTemperatureApp::filterInvalidLine)
