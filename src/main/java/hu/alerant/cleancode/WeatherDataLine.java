@@ -33,12 +33,14 @@ public class WeatherDataLine {
     }
 
 
-    public static WeatherDataLine convert(String rawDataLine) {
+    public static WeatherDataLine convert(String rawDataLine) throws NumberFormatException {
         List<String> lineColumns = Arrays.asList(rawDataLine.split("\\s+"));
         WeatherDataLine weatherDataLine = new WeatherDataLine();
+
         weatherDataLine.setDay((int) Long.parseLong(lineColumns.get(1)));
         weatherDataLine.setMaxTemp(Long.valueOf(lineColumns.get(2).replaceAll("\\*", "")));
         weatherDataLine.setMinTemp(Long.valueOf(lineColumns.get(3).replaceAll("\\*", "")));
+
         return  weatherDataLine;
     }
 

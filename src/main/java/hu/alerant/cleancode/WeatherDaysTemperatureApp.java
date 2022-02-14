@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.ClassLoader.getSystemResource;
+
 public class WeatherDaysTemperatureApp {
+    public static final int HEADER_LINES = 2;
     private final String dataFileName;
 
     public WeatherDaysTemperatureApp(String dataFileName) {
@@ -27,21 +30,20 @@ public class WeatherDaysTemperatureApp {
 
 
     public List<WeatherDataLine> readWeatherDataLines() {
-        List<WeatherDataLine> dataLines = new ArrayList<>();
-        try {
-            List<String> allLines = Files.readAllLines(Paths.get(ClassLoader.getSystemResource(dataFileName).toURI()));
+        List<WeatherDataLine> weatherDataLines = new ArrayList<>();
+        try (var allLines = Files.lines(Paths.get(getSystemResource(dataFileName).toURI()))) {
 
-            //skipping first two header rows and last summary row
-            dataLines =
-                    allLines.subList(2, allLines.size() - 1)
-                            .stream()
-                            .map(WeatherDataLine::convert)
-                            .collect(Collectors.toList());
+            //skipping first two header rows
+            weatherDataLines = allLines
+                                .skip(HEADER_LINES)
+                                .filter(WeatherDaysTemperatureApp::filterInvalidLine)
+                                .map(WeatherDataLine::convert)
+                                .collect(Collectors.toList());
 
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
-        return dataLines;
+        return weatherDataLines;
     }
 
     public WeatherDataLine findMinimumTemperatureDiffRow(List<WeatherDataLine> lines) {
@@ -61,6 +63,10 @@ public class WeatherDaysTemperatureApp {
         //results
         System.out.println("Found minimum diff:" + foundMinTemp);
         return minimumTemperatureDiffRow;
+    }
+
+    public static boolean filterInvalidLine(String line) {
+        return  !line.contains("mo");
     }
 
 }
