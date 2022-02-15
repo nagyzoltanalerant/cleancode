@@ -27,7 +27,7 @@ public class FootballScoreApp {
         List<FootballTeamResultDataLine> footballTeamResultDataLines = app.readWeatherDataLines();
         FootballTeamResultDataLine minimumGoalDiffRow = app.findMinimumGoalDiffRow(footballTeamResultDataLines);
 
-        System.out.println("Found minimum diff, in this row:" +"\n"+ minimumGoalDiffRow.getTeamName());
+        System.out.println(minimumGoalDiffRow.getTeamName());
 
     }
     public List<FootballTeamResultDataLine> readWeatherDataLines() {
@@ -71,7 +71,7 @@ public class FootballScoreApp {
         String teamName = lineColumns.get(2);
         int goalsScored = Integer.valueOf(lineColumns.get(7));
         int goalsReceived = Integer.valueOf(lineColumns.get(9));
-        FootballTeamResultDataLine dataLine = new FootballTeamResultDataLine(teamName, goalsScored, goalsReceived);
-        return  dataLine;
+
+        return  new FootballTeamResultDataLine(teamName, goalsScored, goalsReceived);
     }
 }
