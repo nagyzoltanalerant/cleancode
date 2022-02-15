@@ -11,30 +11,6 @@ public class WeatherDataLine  implements DataLine {
     private Long maxTemp;
     private Long minTemp;
 
-    public int getDay() {
-        return day;
-    }
-
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public Long getMaxTemp() {
-        return maxTemp;
-    }
-
-    public void setMaxTemp(Long maxTemp) {
-        this.maxTemp = maxTemp;
-    }
-
-    public Long getMinTemp() {
-        return minTemp;
-    }
-
-    public void setMinTemp(Long minTemp) {
-        this.minTemp = minTemp;
-    }
-
     public WeatherDataLine(int day, Long maxTemp, Long minTemp) {
         this.day = day;
         this.maxTemp = maxTemp;
@@ -43,7 +19,7 @@ public class WeatherDataLine  implements DataLine {
 
     @Override
     public int getDiff() {
-        return (int) (getMaxTemp()-getMinTemp());
+        return (int) (this.maxTemp-this.minTemp);
     }
 
     @Override

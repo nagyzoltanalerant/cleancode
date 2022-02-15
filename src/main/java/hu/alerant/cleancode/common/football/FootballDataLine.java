@@ -13,12 +13,6 @@ public class FootballDataLine implements DataLine {
         this.goalsReceived = goalsReceived;
     }
 
-    public FootballDataLine() {
-        this.teamName = "UNKNOWN";
-        this.goalsScored = 0;
-        this.goalsReceived = 0;
-    }
-
     public int getDiff() {
         return Math.abs(this.goalsScored - this.goalsReceived);
     }

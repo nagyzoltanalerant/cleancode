@@ -39,9 +39,8 @@ public class DiffCheckApp {
 
         System.out.println(minimumDiffRow.getResult());
 
-
-
     }
+
     public List<DataLine> readDataLines() {
         List<DataLine> dataLines = new ArrayList<>();
         try (var allLines = Files.lines(Paths.get(getSystemResource(diffContext.getDataFileName()).toURI()))) {
