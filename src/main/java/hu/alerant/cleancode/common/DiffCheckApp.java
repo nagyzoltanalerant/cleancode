@@ -24,16 +24,14 @@ public class DiffCheckApp {
     public static void main(String[] args) {
 
         //football
-        DiffContext diffContext = new FootballDiffContext();
-        DiffCheckApp app = new DiffCheckApp(diffContext);
+        DiffCheckApp app = new DiffCheckApp(new FootballDiffContext());
         List<DataLine> dataLines = app.readDataLines();
         DataLine minimumDiffRow = app.findMinimumDiffRow(dataLines);
 
         System.out.println(minimumDiffRow.getResult());
 
         //weather
-        diffContext = new WeatherDiffContext();
-        app = new DiffCheckApp(diffContext);
+        app = new DiffCheckApp(new WeatherDiffContext());
         dataLines = app.readDataLines();
         minimumDiffRow = app.findMinimumDiffRow(dataLines);
 
