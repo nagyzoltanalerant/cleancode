@@ -53,15 +53,12 @@ public class FootballScoreApp {
         for (FootballTeamResultDataLine line : lines) {
             long actualDiff = Math.abs(line.getGoalsScored() - line.getGoalsReceived());
 
-            //compare to known minimum
             if (actualDiff < foundMinDiff) {
                 foundMinDiff = actualDiff;
                 findMinimumGoalDiffRow = line;
             }
         }
 
-        //results
-        System.out.println("Found minimum diff:" + foundMinDiff);
         return findMinimumGoalDiffRow;
     }
 
