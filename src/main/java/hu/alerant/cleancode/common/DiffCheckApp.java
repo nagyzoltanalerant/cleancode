@@ -55,7 +55,7 @@ public class DiffCheckApp {
     }
 
     public DataLine findMinimumDiffRow(List<DataLine> lines) {
-        DataLine findMinimumGoalDiffRow = diffContext.getInitDataLine();
+        DataLine findMinimumGoalDiffRow = lines.get(0);
         long foundMinDiff = Long.MAX_VALUE;
 
         for (DataLine line : lines) {

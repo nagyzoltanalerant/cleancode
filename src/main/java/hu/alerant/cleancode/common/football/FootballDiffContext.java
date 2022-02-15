@@ -23,10 +23,6 @@ public class FootballDiffContext implements DiffContext {
         return HEADER_LINES;
     }
 
-    @Override
-    public DataLine getInitDataLine() {
-        return new FootballDataLine();
-    }
 
     @Override
     public List<DataLine> parseDataFile(Stream<String> allLines) {

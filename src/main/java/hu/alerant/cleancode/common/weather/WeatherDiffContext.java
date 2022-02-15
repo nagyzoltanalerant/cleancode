@@ -24,11 +24,6 @@ public class WeatherDiffContext implements DiffContext {
     }
 
     @Override
-    public DataLine getInitDataLine() {
-        return new WeatherDataLine(0,0l,0l);
-    }
-
-    @Override
     public List<DataLine> parseDataFile(Stream<String> allLines) {
         return  allLines
                 .skip(getSkipHeaders())

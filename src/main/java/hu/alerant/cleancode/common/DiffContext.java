@@ -8,8 +8,6 @@ public interface DiffContext {
 
     public int getSkipHeaders();
 
-    public DataLine getInitDataLine();
-
     public List<DataLine> parseDataFile(Stream<String> allLines);
 
 }

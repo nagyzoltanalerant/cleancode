@@ -42,15 +42,6 @@ public class WeatherDataLine  implements DataLine {
     }
 
     @Override
-    public String toString() {
-        return "WeatherDataLine{" +
-                "day=" + day +
-                ", maxTemp=" + maxTemp +
-                ", minTemp=" + minTemp +
-                '}';
-    }
-
-    @Override
     public int getDiff() {
         return (int) (getMaxTemp()-getMinTemp());
     }
