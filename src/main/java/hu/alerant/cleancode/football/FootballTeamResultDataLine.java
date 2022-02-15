@@ -6,14 +6,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FootballTeamResultDataLine {
-    private final String teamName;
-    private final int goalsScored;
-    private final int goalsReceived;
+    private String teamName;
+    private int goalsScored;
+    private int goalsReceived;
 
     public FootballTeamResultDataLine(String teamName, int goalsScored, int goalsReceived) {
         this.teamName = teamName;
         this.goalsScored = goalsScored;
         this.goalsReceived = goalsReceived;
+    }
+
+    public FootballTeamResultDataLine() {
+        this.teamName = "UNKNOWN";
+        this.goalsScored = 0;
+        this.goalsReceived = 0;
     }
 
     public String getTeamName() {

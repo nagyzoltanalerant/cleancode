@@ -1,4 +1,6 @@
 package hu.alerant.cleancode.football;
+import hu.alerant.cleancode.weather.WeatherDataLine;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -22,7 +24,10 @@ public class FootballScoreApp {
     public static void main(String[] args) {
         String dataFileName = "datamunging/football.dat";
         FootballScoreApp app = new FootballScoreApp(dataFileName);
-        app.readWeatherDataLines();
+        List<FootballTeamResultDataLine> footballTeamResultDataLines = app.readWeatherDataLines();
+        FootballTeamResultDataLine minimumGoalDiffRow = app.findMinimumGoalDiffRow(footballTeamResultDataLines);
+
+        System.out.println("Found minimum diff, in this row:" +"\n"+ minimumGoalDiffRow.getTeamName());
 
     }
     public List<FootballTeamResultDataLine> readWeatherDataLines() {
@@ -39,6 +44,25 @@ public class FootballScoreApp {
             e.printStackTrace();
         }
         return dataLines;
+    }
+
+    public FootballTeamResultDataLine findMinimumGoalDiffRow(List<FootballTeamResultDataLine> lines) {
+        FootballTeamResultDataLine findMinimumGoalDiffRow = new FootballTeamResultDataLine();
+        long foundMinDiff = Long.MAX_VALUE;
+
+        for (FootballTeamResultDataLine line : lines) {
+            long actualDiff = Math.abs(line.getGoalsScored() - line.getGoalsReceived());
+
+            //compare to known minimum
+            if (actualDiff < foundMinDiff) {
+                foundMinDiff = actualDiff;
+                findMinimumGoalDiffRow = line;
+            }
+        }
+
+        //results
+        System.out.println("Found minimum diff:" + foundMinDiff);
+        return findMinimumGoalDiffRow;
     }
 
     public static boolean filterInvalidLine(String line) {
