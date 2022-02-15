@@ -1,4 +1,4 @@
-package hu.alerant.cleancode;
+package hu.alerant.cleancode.weather;
 
 import java.util.Arrays;
 import java.util.List;

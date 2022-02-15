@@ -1,4 +1,4 @@
-package hu.alerant.cleancode;
+package hu.alerant.cleancode.weather;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
